@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">CoroutinesExercises</string>
+    <string name="app_name">Movies</string>
     <string name="home">Home</string>
+
+    <string name="search_placeholder">Search…</string>
+    <string name="empty_search_query">Start typing something to begin a search</string>
+    <string name="empty_search_results">No results found</string>
 </resources>

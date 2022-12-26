@@ -6,4 +6,5 @@ import com.wizeline.coroutinesexercises.domain.entities.Movie
 interface MoviesRepository {
     suspend fun getGenres(): List<Genre>
     suspend fun getMoviesByGenre(genreId: String): List<Movie>
+    suspend fun searchMovies(query: String): List<Movie>
 }

@@ -13,6 +13,9 @@ interface MoviesApi {
     @GET("discover/movie")
     suspend fun getMoviesByGenre(@Query("with_genres") genreId: String): MoviesListResponse
 
+    @GET("search/movie")
+    suspend fun searchMoviesByName(@Query("query") name: String): MoviesListResponse
+
     companion object {
         //  TODO:   Get your own API key at https://www.themoviedb.org/
         const val TMDB_KEY = "028b36691e206a986b4d8fc3e77651a1"

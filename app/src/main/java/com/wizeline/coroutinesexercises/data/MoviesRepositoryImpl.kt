@@ -25,4 +25,8 @@ class MoviesRepositoryImpl @Inject constructor(
             moviesApi.getMoviesByGenre(genreId).toMovieList()
         }
 
+    override suspend fun searchMovies(query: String): List<Movie> = withContext(ioDispatcher) {
+        moviesApi.searchMoviesByName(query).toMovieList()
+    }
+
 }

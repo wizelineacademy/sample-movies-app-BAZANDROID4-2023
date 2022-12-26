@@ -1,10 +1,11 @@
-package com.wizeline.coroutinesexercises.ui.components
+package com.wizeline.coroutinesexercises.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -12,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.wizeline.coroutinesexercises.domain.entities.Movie
-import androidx.compose.material3.Surface
+import com.wizeline.coroutinesexercises.ui.components.AppImage
 import com.wizeline.coroutinesexercises.ui.theme.MoviesTheme
 import com.wizeline.coroutinesexercises.utils.MoviesFakes
 
@@ -31,7 +32,7 @@ fun MovieThumbnail(
             .clip(RoundedCornerShape(5.dp))
             .clickable { onMovieClick(movie.id) }
     ) {
-        Image(
+        AppImage(
             modifier = Modifier.fillMaxSize(),
             imageUrl = movie.posterUrl
         )

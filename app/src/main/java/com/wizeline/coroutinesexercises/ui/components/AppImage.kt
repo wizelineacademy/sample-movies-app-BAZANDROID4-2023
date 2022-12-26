@@ -12,7 +12,7 @@ import com.wizeline.coroutinesexercises.R
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun Image(
+fun AppImage(
     modifier: Modifier = Modifier,
     imageUrl: String,
     @DrawableRes placeholder: Int = R.drawable.loading_animation,
