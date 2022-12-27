@@ -2,7 +2,7 @@ package com.wizeline.coroutinesexercises.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wizeline.coroutinesexercises.domain.usecases.GetGenresWithMovies
+import com.wizeline.coroutinesexercises.domain.usecases.GetGenresWithMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getGenresWithMovies: GetGenresWithMovies
+    private val getGenresWithMoviesUseCase: GetGenresWithMoviesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
 
     private fun refreshMovies() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }
-        val moviesResult = getGenresWithMovies()
+        val moviesResult = getGenresWithMoviesUseCase()
         moviesResult.fold(
             onSuccess = { data ->
                 _uiState.update {

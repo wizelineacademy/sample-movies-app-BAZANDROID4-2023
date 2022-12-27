@@ -4,7 +4,7 @@ import com.wizeline.coroutinesexercises.domain.entities.GenreWithMovies
 import com.wizeline.coroutinesexercises.domain.repositories.MoviesRepository
 import javax.inject.Inject
 
-class GetGenresWithMovies @Inject constructor(
+class GetGenresWithMoviesUseCase @Inject constructor(
     private val moviesRepository: MoviesRepository
 ) {
     suspend operator fun invoke(): Result<List<GenreWithMovies>> = runCatching {
