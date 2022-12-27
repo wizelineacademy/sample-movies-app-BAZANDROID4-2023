@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.wizeline.coroutinesexercises.ui.theme.MoviesTheme
-import com.wizeline.coroutinesexercises.utils.MoviesFakes
+import com.wizeline.coroutinesexercises.utils.fakes.MoviesFakes
 
 @Composable
 fun SearchScreen(
