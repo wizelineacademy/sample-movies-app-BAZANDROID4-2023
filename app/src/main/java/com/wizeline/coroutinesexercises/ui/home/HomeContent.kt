@@ -11,7 +11,7 @@ import com.wizeline.coroutinesexercises.domain.entities.GenreWithMovies
 import com.wizeline.coroutinesexercises.ui.components.DataSection
 import com.wizeline.coroutinesexercises.ui.theme.Dimens
 import com.wizeline.coroutinesexercises.ui.theme.MoviesTheme
-import com.wizeline.coroutinesexercises.utils.GenresFakes
+import com.wizeline.coroutinesexercises.utils.fakes.GenresFakes
 
 @Composable
 fun HomeContent(

@@ -1,4 +1,4 @@
-package com.wizeline.coroutinesexercises.utils
+package com.wizeline.coroutinesexercises.utils.fakes
 
 import com.wizeline.coroutinesexercises.domain.entities.Movie
 import java.time.LocalDate

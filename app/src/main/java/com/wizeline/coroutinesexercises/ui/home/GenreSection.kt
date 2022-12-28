@@ -16,8 +16,8 @@ import com.wizeline.coroutinesexercises.domain.entities.Genre
 import com.wizeline.coroutinesexercises.domain.entities.Movie
 import com.wizeline.coroutinesexercises.ui.theme.Dimens
 import com.wizeline.coroutinesexercises.ui.theme.MoviesTheme
-import com.wizeline.coroutinesexercises.utils.GenresFakes
-import com.wizeline.coroutinesexercises.utils.MoviesFakes
+import com.wizeline.coroutinesexercises.utils.fakes.GenresFakes
+import com.wizeline.coroutinesexercises.utils.fakes.MoviesFakes
 
 @Composable
 fun GenreSection(

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.wizeline.coroutinesexercises.domain.entities.Movie
 import com.wizeline.coroutinesexercises.ui.components.AppImage
 import com.wizeline.coroutinesexercises.ui.theme.MoviesTheme
-import com.wizeline.coroutinesexercises.utils.MoviesFakes
+import com.wizeline.coroutinesexercises.utils.fakes.MoviesFakes
 
 @Composable
 fun MovieThumbnail(
