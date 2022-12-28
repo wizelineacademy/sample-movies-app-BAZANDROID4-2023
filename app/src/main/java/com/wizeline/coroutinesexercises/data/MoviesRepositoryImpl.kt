@@ -3,30 +3,32 @@ package com.wizeline.coroutinesexercises.data
 import com.wizeline.coroutinesexercises.data.remote.MoviesApi
 import com.wizeline.coroutinesexercises.data.remote.mappers.toGenreList
 import com.wizeline.coroutinesexercises.data.remote.mappers.toMovieList
-import com.wizeline.coroutinesexercises.di.IoDispatcher
+import com.wizeline.coroutinesexercises.di.IoScheduler
 import com.wizeline.coroutinesexercises.domain.entities.Genre
 import com.wizeline.coroutinesexercises.domain.entities.Movie
 import com.wizeline.coroutinesexercises.domain.repositories.MoviesRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
     private val moviesApi: MoviesApi,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoScheduler private val ioScheduler: Scheduler
 ) : MoviesRepository {
 
-    override suspend fun getGenres(): List<Genre> = withContext(ioDispatcher) {
-        moviesApi.getGenres().toGenreList()
-    }
+    override fun getGenres(): Single<List<Genre>> =
+        moviesApi.getGenres()
+            .map { it.toGenreList() }
+            .subscribeOn(ioScheduler)
 
-    override suspend fun getMoviesByGenre(genreId: String): List<Movie> =
-        withContext(ioDispatcher) {
-            moviesApi.getMoviesByGenre(genreId).toMovieList()
-        }
+    override fun getMoviesByGenre(genreId: String): Single<List<Movie>> =
+        moviesApi.getMoviesByGenre(genreId)
+            .map { it.toMovieList() }
+            .subscribeOn(ioScheduler)
 
-    override suspend fun searchMovies(query: String): List<Movie> = withContext(ioDispatcher) {
-        moviesApi.searchMoviesByName(query).toMovieList()
-    }
+    override fun searchMovies(query: String): Single<List<Movie>> =
+        moviesApi.searchMoviesByName(query)
+            .map { it.toMovieList() }
+            .subscribeOn(ioScheduler)
 
 }

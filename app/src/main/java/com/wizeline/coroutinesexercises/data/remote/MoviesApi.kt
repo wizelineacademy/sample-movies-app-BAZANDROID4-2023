@@ -2,19 +2,20 @@ package com.wizeline.coroutinesexercises.data.remote
 
 import com.wizeline.coroutinesexercises.data.remote.dto.GenresResponse
 import com.wizeline.coroutinesexercises.data.remote.dto.MoviesListResponse
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MoviesApi {
 
     @GET("genre/movie/list")
-    suspend fun getGenres(): GenresResponse
+    fun getGenres(): Single<GenresResponse>
 
     @GET("discover/movie")
-    suspend fun getMoviesByGenre(@Query("with_genres") genreId: String): MoviesListResponse
+    fun getMoviesByGenre(@Query("with_genres") genreId: String): Single<MoviesListResponse>
 
     @GET("search/movie")
-    suspend fun searchMoviesByName(@Query("query") name: String): MoviesListResponse
+    fun searchMoviesByName(@Query("query") name: String): Single<MoviesListResponse>
 
     companion object {
         //  TODO:   Get your own API key at https://www.themoviedb.org/
