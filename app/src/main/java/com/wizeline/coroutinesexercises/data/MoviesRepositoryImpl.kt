@@ -9,6 +9,7 @@ import com.wizeline.coroutinesexercises.domain.entities.Movie
 import com.wizeline.coroutinesexercises.domain.repositories.MoviesRepository
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
@@ -18,7 +19,10 @@ class MoviesRepositoryImpl @Inject constructor(
 
     override fun getGenres(): Single<List<Genre>> =
         moviesApi.getGenres()
-            .map { it.toGenreList() }
+            .map {
+                Timber.d("Got genres from api")
+                it.toGenreList()
+            }
             .subscribeOn(ioScheduler)
 
     override fun getMoviesByGenre(genreId: String): Single<List<Movie>> =
