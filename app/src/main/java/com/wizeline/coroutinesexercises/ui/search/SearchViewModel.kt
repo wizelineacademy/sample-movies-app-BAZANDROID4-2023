@@ -4,18 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.wizeline.coroutinesexercises.di.MainScheduler
 import com.wizeline.coroutinesexercises.domain.usecases.SearchMoviesUseCase
+import com.wizeline.coroutinesexercises.utils.update
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.processors.BehaviorProcessor
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchMoviesUseCase: SearchMoviesUseCase,
@@ -23,26 +20,25 @@ class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState = _uiState.asStateFlow()
+    private val _uiState = BehaviorProcessor.createDefault(SearchUiState())
+    val uiState: Flowable<SearchUiState> = _uiState
+    private val query = BehaviorProcessor.createDefault(
+        savedStateHandle[QUERY_SAVED_STATE_KEY] ?: DEFAULT_QUERY
+    )
     private val compositeDisposable = CompositeDisposable()
-    private val query = BehaviorProcessor.create<String>()
 
     fun setQuery(query: String) {
-        this.query.onNext(query)
+        this.query.update { query }
     }
 
     fun clearQuery() {
-        this.query.onNext("")
+        this.query.update { "" }
     }
 
     init {
-        val initialQuery = savedStateHandle[QUERY_SAVED_STATE_KEY] ?: DEFAULT_QUERY
-        query.onNext(initialQuery)
-
         query
             .doOnEach { query ->
-                _uiState.update { it.copy(query = query.value ?: DEFAULT_QUERY, isLoading = true) }
+                _uiState.update { it?.copy(query = query.value ?: DEFAULT_QUERY, isLoading = true) }
             }
             .debounce(300, TimeUnit.MILLISECONDS)
             .flatMap { query ->
@@ -50,10 +46,10 @@ class SearchViewModel @Inject constructor(
             }
             .observeOn(mainScheduler)
             .subscribe({ data ->
-                _uiState.update { it.copy(isLoading = false, movies = data) }
+                _uiState.update { it?.copy(isLoading = false, movies = data) }
             }, { e ->
                 _uiState.update {
-                    it.copy(
+                    it?.copy(
                         isLoading = false,
                         errorMessage = e.message
                     )
