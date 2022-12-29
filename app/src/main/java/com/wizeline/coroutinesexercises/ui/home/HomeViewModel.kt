@@ -3,7 +3,6 @@ package com.wizeline.coroutinesexercises.ui.home
 import androidx.lifecycle.ViewModel
 import com.wizeline.coroutinesexercises.di.MainScheduler
 import com.wizeline.coroutinesexercises.domain.usecases.GetGenresWithMoviesUseCase
-import com.wizeline.coroutinesexercises.utils.update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
@@ -29,25 +28,30 @@ class HomeViewModel @Inject constructor(
         val moviesResult = getGenresWithMoviesUseCase()
         moviesResult
             .observeOn(mainScheduler)
-            .doOnSubscribe { _uiState.update { it?.copy(isLoading = true) } }
+            .doOnSubscribe {
+                _uiState.offer(_uiState.valueOrDefault.copy(isLoading = true))
+            }
             .subscribe(
                 { data ->
-                    _uiState.update {
-                        it?.copy(isLoading = false, genreSections = data)
-                    }
+                    _uiState.offer(
+                        _uiState.valueOrDefault.copy(isLoading = false, genreSections = data)
+                    )
                 }, { e ->
-                    _uiState.update {
-                        it?.copy(
+                    _uiState.offer(
+                        _uiState.valueOrDefault.copy(
                             isLoading = false,
                             errorMessage = "Couldn't load data: ${e.message}"
                         )
-                    }
+                    )
                 }
             ).let { compositeDisposable.add(it) }
     }
 
     override fun onCleared() {
         compositeDisposable.clear()
+        _uiState.onComplete()
         super.onCleared()
     }
 }
+
+val BehaviorProcessor<HomeUiState>.valueOrDefault get() = this.value ?: HomeUiState()
