@@ -4,8 +4,6 @@ import com.wizeline.coroutinesexercises.data.remote.MoviesApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -14,9 +12,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
@@ -64,7 +63,7 @@ object NetworkModule {
             .build()
     }
 
-    @ViewModelScoped
+    @Singleton
     @Provides
     fun providesMoviesApi(retrofit: Retrofit): MoviesApi {
         return retrofit.create(MoviesApi::class.java)
