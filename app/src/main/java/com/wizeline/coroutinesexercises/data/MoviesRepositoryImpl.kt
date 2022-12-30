@@ -9,12 +9,17 @@ import com.wizeline.coroutinesexercises.domain.entities.Movie
 import com.wizeline.coroutinesexercises.domain.repositories.MoviesRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
     private val moviesApi: MoviesApi,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : MoviesRepository {
+
+    init {
+        Timber.d("MoviesApiInstance: ${this.moviesApi}")
+    }
 
     override suspend fun getGenres(): List<Genre> = withContext(ioDispatcher) {
         moviesApi.getGenres().toGenreList()

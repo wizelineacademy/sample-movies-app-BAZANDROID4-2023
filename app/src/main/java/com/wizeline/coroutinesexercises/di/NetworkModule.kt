@@ -12,7 +12,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import javax.inject.Qualifier
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -54,7 +53,6 @@ object NetworkModule {
             .build()
     }
 
-    @Singleton
     @Provides
     fun providesRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
@@ -64,7 +62,6 @@ object NetworkModule {
             .build()
     }
 
-    @Singleton
     @Provides
     fun providesMoviesApi(retrofit: Retrofit): MoviesApi {
         return retrofit.create(MoviesApi::class.java)
