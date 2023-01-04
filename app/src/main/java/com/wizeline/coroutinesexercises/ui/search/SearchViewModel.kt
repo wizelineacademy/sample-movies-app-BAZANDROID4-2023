@@ -2,10 +2,10 @@ package com.wizeline.coroutinesexercises.ui.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.wizeline.coroutinesexercises.domain.usecases.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okio.IOException
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -25,7 +26,7 @@ class SearchViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val query = savedStateHandle.getLiveData(QUERY_SAVED_STATE_KEY, "").asFlow()
+    private val query = savedStateHandle.getStateFlow(QUERY_SAVED_STATE_KEY, "")
 
     fun setQuery(query: String) {
         savedStateHandle[QUERY_SAVED_STATE_KEY] = query
@@ -43,20 +44,26 @@ class SearchViewModel @Inject constructor(
                 }
                 .debounce(300)
                 .collect { query ->
-                    val movies = searchMoviesUseCase(query)
-                    movies.fold(
-                        onSuccess = { data ->
-                            _uiState.update { it.copy(isLoading = false, movies = data) }
-                        },
-                        onFailure = { e ->
-                            _uiState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    errorMessage = e.message
-                                )
-                            }
+                    try {
+                        val movies = searchMoviesUseCase(query)
+                        _uiState.update { it.copy(isLoading = false, movies = movies) }
+                    } catch (e1: IOException) {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = e1.message
+                            )
                         }
-                    )
+                    } catch (e2: CancellationException) {
+                        throw e2
+                    } catch (e: Exception) {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = e.message
+                            )
+                        }
+                    }
                 }
         }
     }

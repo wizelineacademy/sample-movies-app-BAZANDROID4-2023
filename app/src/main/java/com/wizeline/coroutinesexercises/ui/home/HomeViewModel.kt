@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okio.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,19 +25,16 @@ class HomeViewModel @Inject constructor(
 
     private fun refreshMovies() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }
-        val moviesResult = getGenresWithMoviesUseCase()
-        moviesResult.fold(
-            onSuccess = { data ->
-                _uiState.update {
-                    it.copy(isLoading = false, genreSections = data)
-                }
-            },
-            onFailure = { e ->
-                _uiState.update {
-                    it.copy(isLoading = false, errorMessage = "Couldn't load data: ${e.message}")
-                }
+        try {
+            val moviesResult = getGenresWithMoviesUseCase()
+            _uiState.update {
+                it.copy(isLoading = false, genreSections = moviesResult)
             }
-        )
+        } catch (e: IOException) {
+            _uiState.update {
+                it.copy(isLoading = false, errorMessage = "Couldn't load data: ${e.message}")
+            }
+        }
     }
 
 }
